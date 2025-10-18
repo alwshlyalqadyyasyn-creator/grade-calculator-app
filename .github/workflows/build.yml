@@ -2,30 +2,42 @@ name: بناء تطبيق الأندرويد
 
 on: 
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     
     steps:
-    # الخطوة 1: تحميل الكود من المستودعh
-    - name: تحميل المستودع
-      uses: actions/checkout@v3
+    # الخطوة 1: تحميل المستودع
+    - name: تحميل الكود
+      uses: actions/checkout@v4
 
-    # الخطوة 2: بناء التطبيق باستخدام Buildozer
-    - name: بناء التطبيق
-      uses: artem-kruglikov/kivy-buildozer-action@v1.1.0
+    # الخطوة 2: إعداد البيئة
+    - name: إعداد Python
+      uses: actions/setup-python@v4
       with:
-        buildozer-version: stable
-        target: android
+        python-version: '3.10'
 
-    # الخطوة 3: رفع ملف APK النهائي
+    # الخطوة 3: تثبيت Buildozer
+    - name: تثبيت Buildozer
+      run: |
+        pip install buildozer
+        sudo apt-get update
+        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libtinfo5 cmake libffi-dev libssl-dev
+
+    # الخطوة 4: بناء التطبيق
+    - name: بناء APK
+      run: |
+        buildozer init
+        buildozer -v android debug
+
+    # الخطوة 5: رفع الملف النهائي
     - name: رفع ملف APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: تطبيق-حاسبة-الدرجات
         path: bin/*.apk
-        retention-days: 30
+        retention-days: 90

@@ -1,0 +1,31 @@
+name: بناء تطبيق الأندرويد
+
+on: 
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # الخطوة 1: تحميل الكود من المستودع
+    - name: تحميل المستودع
+      uses: actions/checkout@v3
+
+    # الخطوة 2: بناء التطبيق باستخدام Buildozer
+    - name: بناء التطبيق
+      uses: artem-kruglikov/kivy-buildozer-action@v1.1.0
+      with:
+        buildozer-version: stable
+        target: android
+
+    # الخطوة 3: رفع ملف APK النهائي
+    - name: رفع ملف APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: تطبيق-حاسبة-الدرجات
+        path: bin/*.apk
+        retention-days: 30

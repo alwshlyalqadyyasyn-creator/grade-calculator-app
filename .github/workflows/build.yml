@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    # الخطوة 1: تحميل الكود من المستودع
+    # الخطوة 1: تحميل الكود من المستودعh
     - name: تحميل المستودع
       uses: actions/checkout@v3
 
